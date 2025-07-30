@@ -85,9 +85,9 @@ export default function Home() {
                 Safety
               </a>
               <div className="pt-4 pb-3 border-t border-gray-200">
-                <button className="text-gray-700 hover:text-pink-500 block px-4 py-3 rounded-lg text-base font-medium hover:bg-pink-50 transition-all duration-300">
+                <Link href="/login" className="text-gray-700 hover:text-pink-500 block px-4 py-3 rounded-lg text-base font-medium hover:bg-pink-50 transition-all duration-300">
                   Sign In
-                </button>
+                </Link>
                 <button className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-8 py-3 rounded-full text-sm font-medium mt-3 hover:shadow-xl transition-all duration-300">
                   Get Started
                 </button>
@@ -99,29 +99,110 @@ export default function Home() {
 
       {/* New Hero Section with Image */}
       <section className="relative overflow-hidden">
-        <div className="relative">
-                      <Image 
-              src="/images/dating1.png" 
-              alt="Hero Image" 
-              width={2560} 
-              height={1440} 
-              className="w-full h-80 lg:h-154 object-cover object-center" 
-              priority
-            />
+        {/* Mobile Layout: Image with text below */}
+        <div className="block lg:hidden">
+          <Image 
+            src="/images/dating1.png" 
+            alt="Hero Image" 
+            width={2560} 
+            height={1440} 
+            className="w-full h-64 object-cover object-center" 
+            priority
+          />
+          
+          {/* Mobile Content Below Image */}
+          <div className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 px-4 py-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center space-y-6">
+                <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 bg-pink-500 rounded-full mr-2 animate-pulse"></span>
+                  New Feature
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900 leading-tight">
+                  Discover
+                  <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 bg-clip-text text-transparent"> True Love</span>
+                  <br />
+                  <span className="text-gray-900">Every Day</span>
+                </h1>
+                <p className="text-base text-gray-600 leading-relaxed max-w-lg mx-auto">
+                  Experience the magic of meaningful connections. Our advanced matching algorithm 
+                  helps you find someone who truly understands and complements you.
+                </p>
+                
+                <div className="flex flex-col gap-3">
+                  <button className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 group shadow-lg">
+                    <span className="flex items-center justify-center">
+                      Start Your Journey
+                      <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </span>
+                  </button>
+                  <button className="border-2 border-pink-500 text-pink-500 px-6 py-3 rounded-full text-sm font-semibold hover:bg-pink-500 hover:text-white transition-all duration-300 group">
+                    <span className="flex items-center justify-center">
+                      Watch Demo
+                      <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                
+                <div className="flex flex-col items-center gap-4 text-xs text-gray-600">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mr-2">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    AI-Powered Matching
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center mr-2">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    Video Chat
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-pink-600 rounded-full flex items-center justify-center mr-2">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    Real-time Messaging
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout: Image with overlaid text */}
+        <div className="hidden lg:block relative">
+          <Image 
+            src="/images/dating1.png" 
+            alt="Hero Image" 
+            width={2560} 
+            height={1440} 
+            className="w-full h-[600px] object-cover object-center" 
+            priority
+          />
           {/* Subtle overlay for better visual appeal */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent"></div>
           
           {/* Content overlay */}
-          <div className="absolute inset-0 flex items-center">
+          <div className="absolute inset-0 flex items-center justify-start py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="text-left">
                 <div className="space-y-8">
                   <div className="space-y-6">
                     <div className="inline-flex items-center px-4 py-2 rounded-full bg-black/30 backdrop-blur-sm text-white text-sm font-medium shadow-lg">
                       <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
                       New Feature
                     </div>
-                    <h1 className="text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-lg">
+                    <h1 className="text-6xl font-bold text-white leading-tight drop-shadow-lg">
                       Discover
                       <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-lg"> True Love</span>
                       <br />
@@ -133,7 +214,7 @@ export default function Home() {
                     </p>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-6">
+                  <div className="flex flex-row gap-6">
                     <button className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group shadow-lg">
                       <span className="flex items-center justify-center">
                         Start Your Journey
@@ -152,7 +233,7 @@ export default function Home() {
                     </button>
                   </div>
                   
-                  <div className="flex items-center space-x-8 text-sm text-white drop-shadow-lg">
+                  <div className="flex items-center gap-8 text-sm text-white drop-shadow-lg">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center mr-3 shadow-lg">
                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -184,8 +265,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
 
       {/* Features Section */}
       <section className="py-24 bg-white/50 backdrop-blur-sm">
