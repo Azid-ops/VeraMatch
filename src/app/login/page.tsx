@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Topbar from "../topbar/page";
 import Footer from "../footer/footer";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,8 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter();
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
@@ -133,6 +136,7 @@ export default function Login() {
                 {/* Login Button */}
                 <button
                   type="submit"
+                  onClick={() => router.push("/user/dashboard")}
                   className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 group"
                 >
                   <span className="flex items-center justify-center">

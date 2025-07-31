@@ -1,22 +1,14 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
-interface SplashScreenProps {
+interface UserSplashProps {
   onComplete?: () => void;
   duration?: number;
 }
 
-export default function SplashScreen({ onComplete, duration = 1000 }: SplashScreenProps) {
+export default function UserSplash({ onComplete, duration = 1000 }: UserSplashProps) {
   const [showSplash, setShowSplash] = useState(true);
-  const pathname = usePathname();
-  
-  // Don't show global splash if user is in user directory
-  const isUserRoute = pathname?.startsWith('/user');
-  if (isUserRoute) {
-    return null;
-  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,7 +26,7 @@ export default function SplashScreen({ onComplete, duration = 1000 }: SplashScre
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-600 flex items-center justify-center z-50">
+    <div className="flex items-center justify-center h-full min-h-[400px]">
       <div className="text-center">
         {/* VeraMatch Icon */}
         <div className="relative mb-8">
