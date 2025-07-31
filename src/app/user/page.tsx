@@ -258,99 +258,99 @@ const User = () => {
     const SearchContent = () => (
         <div className="p-6">
             {/* Futuristic Header */}
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <div className="relative">
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 bg-clip-text text-transparent">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 bg-clip-text text-transparent">
                             Discover People
                         </h1>
                         <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 rounded-full animate-pulse"></div>
                     </div>
                     <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-500 font-medium">24 people nearby</span>
+                        <span className="text-xs sm:text-sm text-gray-500 font-medium">24 people nearby</span>
                     </div>
                 </div>
-                <button className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group">
+                <button className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-medium hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group w-full sm:w-auto">
                     <span className="relative z-10">🔄 Refresh</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
             </div>
 
             {/* Futuristic Search Filters */}
-            <div className="relative bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20 mb-8 overflow-hidden">
+            <div className="relative bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-xl rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-white/20 mb-8 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10"></div>
                 <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
-                            <span className="text-2xl">⚡</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-2 sm:space-y-0">
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 flex items-center space-x-2 sm:space-x-3">
+                            <span className="text-lg sm:text-xl md:text-2xl">⚡</span>
                             <span>Advanced Filters</span>
                         </h2>
-                        <button className="text-sm text-purple-600 hover:text-purple-700 font-medium hover:scale-105 transition-transform duration-200">
+                        <button className="text-xs sm:text-sm text-purple-600 hover:text-purple-700 font-medium hover:scale-105 transition-transform duration-200">
                             Clear All
                         </button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">Age Range</label>
-                            <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-300 hover:border-pink-300">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">Age Range</label>
+                            <select className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-300 hover:border-pink-300 text-xs sm:text-sm md:text-base">
                                 <option>18-25</option>
                                 <option>26-35</option>
                                 <option>36-45</option>
                                 <option>46+</option>
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">Distance</label>
-                            <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">Distance</label>
+                            <select className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-300 hover:border-purple-300 text-xs sm:text-sm md:text-base">
                                 <option>Within 5 miles</option>
                                 <option>Within 10 miles</option>
                                 <option>Within 25 miles</option>
                                 <option>Any distance</option>
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">Looking For</label>
-                            <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 hover:border-blue-300">
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">Looking For</label>
+                            <select className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 hover:border-blue-300 text-xs sm:text-sm md:text-base">
                                 <option>Serious Relationship</option>
                                 <option>Casual Dating</option>
                                 <option>Friendship</option>
                                 <option>Marriage</option>
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">Online Status</label>
-                            <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300 hover:border-green-300">
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">Online Status</label>
+                            <select className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-white/80 backdrop-blur-sm text-gray-900 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300 hover:border-green-300 text-xs sm:text-sm md:text-base">
                                 <option>All Users</option>
                                 <option>Online Now</option>
                                 <option>Recently Active</option>
                             </select>
                         </div>
                     </div>
-                    <div className="mt-6 flex items-center justify-between">
-                        <div className="flex items-center space-x-6">
+                    <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
                             <label className="flex items-center space-x-3 cursor-pointer group">
                                 <div className="relative">
                                     <input type="checkbox" className="sr-only peer" />
-                                    <div className="w-6 h-6 bg-gray-200 rounded-lg peer-checked:bg-gradient-to-r from-pink-500 to-purple-600 transition-all duration-300 peer-checked:shadow-lg"></div>
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-200 rounded-lg peer-checked:bg-gradient-to-r from-pink-500 to-purple-600 transition-all duration-300 peer-checked:shadow-lg"></div>
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100 transition-opacity duration-300">
-                                        <span className="text-white text-sm">✓</span>
+                                        <span className="text-white text-xs sm:text-sm">✓</span>
                                     </div>
                                 </div>
-                                <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Verified Profiles Only</span>
+                                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Verified Profiles Only</span>
                             </label>
                             <label className="flex items-center space-x-3 cursor-pointer group">
                                 <div className="relative">
                                     <input type="checkbox" className="sr-only peer" />
-                                    <div className="w-6 h-6 bg-gray-200 rounded-lg peer-checked:bg-gradient-to-r from-purple-500 to-blue-600 transition-all duration-300 peer-checked:shadow-lg"></div>
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-200 rounded-lg peer-checked:bg-gradient-to-r from-purple-500 to-blue-600 transition-all duration-300 peer-checked:shadow-lg"></div>
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100 transition-opacity duration-300">
-                                        <span className="text-white text-sm">✓</span>
+                                        <span className="text-white text-xs sm:text-sm">✓</span>
                                     </div>
                                 </div>
-                                <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">With Photos</span>
+                                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">With Photos</span>
                             </label>
                         </div>
-                        <button className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group">
+                        <button className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group w-full sm:w-auto text-sm sm:text-base">
                             <span className="relative z-10">Apply Filters</span>
                             <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </button>
@@ -361,39 +361,39 @@ const User = () => {
             {/* Interactive 3D Profile Cards */}
             <div className="space-y-12">
                 {/* 3D Header */}
-                <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-10 shadow-2xl border border-white/20">
-                    <div className="flex items-center justify-between">
+                <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl border border-white/20">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 sm:space-y-6 lg:space-y-0">
                         <div>
-                            <h3 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg">
                                 3D Profile Discovery
                             </h3>
-                            <div className="flex items-center space-x-8 text-xl">
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                            <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 lg:space-x-6 xl:space-x-8 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
+                                <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-green-400 rounded-full animate-pulse"></div>
                                     <span className="text-white font-bold">24 profiles available</span>
                                 </div>
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-4 h-4 bg-blue-400 rounded-full animate-pulse"></div>
+                                <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-blue-400 rounded-full animate-pulse"></div>
                                     <span className="text-white font-bold">8 online now</span>
                                 </div>
                             </div>
                         </div>
                         
                         {/* 3D Navigation */}
-                        <div className="flex items-center space-x-8">
+                        <div className="flex items-center justify-center lg:justify-end space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 xl:space-x-8">
                             <button 
                                 onClick={() => handleNavigation('search')}
-                                className="p-5 bg-white/20 backdrop-blur-sm text-white rounded-2xl border-2 border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-110 font-bold text-xl shadow-xl"
+                                className="p-2 sm:p-3 md:p-4 lg:p-5 bg-white/20 backdrop-blur-sm text-white rounded-xl sm:rounded-2xl border-2 border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-110 font-bold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl shadow-xl"
                             >
                                 ◀ Previous
                             </button>
-                            <div className="text-center bg-white/20 backdrop-blur-sm rounded-2xl p-5 border-2 border-white/30 shadow-xl">
-                                <div className="text-3xl font-bold text-white">1</div>
-                                <div className="text-base text-white/80 font-medium">of 24</div>
+                            <div className="text-center bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 border-2 border-white/30 shadow-xl">
+                                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white">1</div>
+                                <div className="text-xs sm:text-xs md:text-sm lg:text-base text-white/80 font-medium">of 24</div>
                             </div>
                             <button 
                                 onClick={() => handleNavigation('search')}
-                                className="p-5 bg-white/20 backdrop-blur-sm text-white rounded-2xl border-2 border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-110 font-bold text-xl shadow-xl"
+                                className="p-2 sm:p-3 md:p-4 lg:p-5 bg-white/20 backdrop-blur-sm text-white rounded-xl sm:rounded-2xl border-2 border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-110 font-bold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl shadow-xl"
                             >
                                 Next ▶
                             </button>
@@ -645,15 +645,15 @@ const User = () => {
                 </div>
 
                 {/* 3D Navigation */}
-                <div className="flex justify-center space-x-8">
+                <div className="flex justify-center space-x-4 sm:space-x-6 md:space-x-8 overflow-x-auto pb-2">
                     {[1, 2, 3, 4, 5, 6].map((index) => (
-                        <div key={index} className={`w-24 h-24 rounded-2xl border-2 transition-all duration-300 cursor-pointer transform hover:scale-110 shadow-xl ${
+                        <div key={index} className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl border-2 transition-all duration-300 cursor-pointer transform hover:scale-110 shadow-xl flex-shrink-0 ${
                             index === 1 
                                 ? 'border-white bg-gradient-to-br from-pink-500/40 to-purple-500/40 shadow-pink-300 scale-110' 
                                 : 'border-white/30 bg-gradient-to-br from-white/10 to-white/5 hover:border-white/50'
                         }`}>
                             <div className="w-full h-full flex items-center justify-center">
-                                <span className="text-4xl">{['👩', '👨', '👩', '👨', '👩', '👨'][index - 1]}</span>
+                                <span className="text-2xl sm:text-3xl md:text-4xl">{['👩', '👨', '👩', '👨', '👩', '👨'][index - 1]}</span>
                             </div>
                         </div>
                     ))}
