@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Dashboard from './dashboard/page';
+import Profile from './profile/page';
 
 const User = () => {
     const [isCollapsed, setIsCollapsed] = useState(true); // Start collapsed on mobile
+    const [isMiniSidebar, setIsMiniSidebar] = useState(false); // Mini sidebar state
     const [activeView, setActiveView] = useState('dashboard');
     const [showSplash, setShowSplash] = useState(false);
 
@@ -25,64 +27,40 @@ const User = () => {
         setShowSplash(true);
         setActiveView(viewId);
         
+        // Auto-collapse sidebar on mobile after navigation
+        if (window.innerWidth < 1024) {
+            setIsCollapsed(true);
+            setIsMiniSidebar(false);
+        }
+        
         // Hide splash after 2 seconds
         setTimeout(() => {
             setShowSplash(false);
         }, 2000);
     };
 
-    // Profile Content
-    const ProfileContent = () => (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
-            <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow p-6">
-                <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xl font-bold">U</span>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-semibold text-gray-900">User Name</h2>
-                        <p className="text-gray-600">user@example.com</p>
-                    </div>
-                </div>
-                
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900"
-                            defaultValue="User Name"
-                        />
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input 
-                            type="email" 
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900"
-                            defaultValue="user@example.com"
-                        />
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                        <input 
-                            type="tel" 
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900"
-                            defaultValue="+1 (555) 123-4567"
-                        />
-                    </div>
-                </div>
-                
-                <div className="mt-6">
-                    <button className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white px-4 py-2 rounded-md transition-colors">
-                        Save Changes
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+    const toggleSidebar = () => {
+        if (isCollapsed) {
+            // From collapsed to mini sidebar
+            setIsMiniSidebar(true);
+            setIsCollapsed(false);
+        } else if (isMiniSidebar) {
+            // From mini sidebar to full sidebar
+            setIsMiniSidebar(false);
+            setIsCollapsed(false);
+        } else {
+            // From full sidebar to mini sidebar
+            setIsMiniSidebar(true);
+            setIsCollapsed(false);
+        }
+    };
+
+    const getSidebarWidth = () => {
+        if (isCollapsed) return 'w-0';
+        if (isMiniSidebar) return 'w-16';
+        return 'w-64';
+    };
+
 
     // Settings Content
     const SettingsContent = () => (
@@ -741,7 +719,7 @@ const User = () => {
             case 'dashboard':
                 return <Dashboard />;
             case 'profile':
-                return <ProfileContent />;
+                return <Profile />;
             case 'settings':
                 return <SettingsContent />;
             case 'analytics':
@@ -760,28 +738,56 @@ const User = () => {
     };
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+                <div className="flex h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
             {/* Splash Screen */}
             {showSplash && <SplashScreen />}
+            
+            {/* Floating Toggle Button - Always Visible */}
+            {isCollapsed && (
+                <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 animate-fadeInUp">
+                    <button
+                        onClick={toggleSidebar}
+                        className="w-10 h-10 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center border border-white/30 backdrop-blur-sm group"
+                    >
+                        <svg className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {/* Floating Close Button - For Mini Sidebar */}
+            {isMiniSidebar && (
+                <div className="fixed left-20 top-1/2 transform -translate-y-1/2 z-50 animate-bounceIn">
+                    <button
+                        onClick={() => {
+                            setIsCollapsed(true);
+                            setIsMiniSidebar(false);
+                        }}
+                        className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center border border-white/30 backdrop-blur-sm group"
+                    >
+                        <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            )}
             
             <div className="relative">
                 {/* Sidebar */}
                 <div className={`
                     fixed top-0 left-0 h-full z-50
                     bg-white/95 backdrop-blur-sm border-r border-pink-200/50
-                    ${isCollapsed ? 'w-16' : 'w-64'}
+                    ${getSidebarWidth()}
                     lg:relative lg:translate-x-0
-                    ${isCollapsed ? '-translate-x-0' : 'translate-x-0'}
-                    lg:block
-                    ${isCollapsed ? 'w-16' : 'w-56 sm:w-64'}
                     transition-all duration-300 ease-in-out
-                    min-w-16
                     shadow-lg
+                    ${isCollapsed ? 'overflow-hidden -translate-x-full' : ''}
                 `}>
                     
                     {/* Header */}
                     <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b border-pink-200/50 bg-white/90`}>
-                        {!isCollapsed && (
+                        {!isCollapsed && !isMiniSidebar && (
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
                                     <span className="text-white text-sm font-bold">V</span>
@@ -790,92 +796,97 @@ const User = () => {
                             </div>
                         )}
                         <button
-                            onClick={() => setIsCollapsed(!isCollapsed)}
+                            onClick={toggleSidebar}
                             className="p-2 rounded-lg hover:bg-pink-100/50 transition-colors text-gray-700"
                         >
-                            {isCollapsed ? '☰' : '✕'}
+                            {isCollapsed ? '☰' : isMiniSidebar ? '→' : '←'}
                         </button>
                     </div>
 
-                    {/* User Profile */}
-                    <div className="p-4 border-b border-pink-200/50">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-semibold">U</span>
-                            </div>
-                            {!isCollapsed && (
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">User Name</p>
-                                    <p className="text-xs text-gray-600 truncate">user@example.com</p>
-                                </div>
-                            )}
+                                    {/* User Profile */}
+                <div className="p-4 border-b border-pink-200/50">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-semibold">U</span>
                         </div>
+                        {!isCollapsed && !isMiniSidebar && (
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">User Name</p>
+                                <p className="text-xs text-gray-600 truncate">user@example.com</p>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                    {/* Search Button */}
-                    <div className="p-4 border-b border-pink-200/50">
-                        <button
-                            onClick={() => handleNavigation('search')}
-                            className={`
-                                w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200
-                                ${activeView === 'search' 
-                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white shadow-lg' 
-                                    : 'text-gray-700 hover:bg-pink-100/50 hover:text-gray-900'
-                                }
-                                ${isCollapsed ? 'justify-center' : 'justify-start'}
-                            `}
-                        >
-                            <span className="text-lg">🔍</span>
-                            {!isCollapsed && (
-                                <span className="font-medium">Browse People</span>
-                            )}
-                        </button>
-                    </div>
+                                    {/* Search Button */}
+                <div className="p-4 border-b border-pink-200/50">
+                    <button
+                        onClick={() => handleNavigation('search')}
+                        className={`
+                            w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200
+                            ${activeView === 'search' 
+                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white shadow-lg' 
+                                : 'text-gray-700 hover:bg-pink-100/50 hover:text-gray-900'
+                            }
+                            ${isCollapsed || isMiniSidebar ? 'justify-center' : 'justify-start'}
+                        `}
+                    >
+                        <span className="text-lg">🔍</span>
+                        {!isCollapsed && !isMiniSidebar && (
+                            <span className="font-medium">Browse People</span>
+                        )}
+                    </button>
+                </div>
 
-                    {/* Navigation Menu */}
-                    <nav className="flex-1 p-4 space-y-2">
-                        {menuItems.map((item) => {
-                            const isActive = activeView === item.id;
-                            return (
-                                <button
-                                    key={item.id}
-                                    onClick={() => handleNavigation(item.id)}
-                                    className={`
-                                        w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200
-                                        ${isActive 
-                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white shadow-lg' 
-                                            : 'text-gray-700 hover:bg-pink-100/50 hover:text-gray-900'
-                                        }
-                                        ${isCollapsed ? 'justify-center' : 'justify-start'}
-                                    `}
-                                >
-                                    <span className="text-lg">{item.icon}</span>
-                                    {!isCollapsed && (
-                                        <span className="font-medium">{item.label}</span>
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </nav>
+                                    {/* Navigation Menu */}
+                <nav className="flex-1 p-4 space-y-2">
+                    {menuItems.map((item) => {
+                        const isActive = activeView === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => handleNavigation(item.id)}
+                                className={`
+                                    w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200
+                                    ${isActive 
+                                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white shadow-lg' 
+                                        : 'text-gray-700 hover:bg-pink-100/50 hover:text-gray-900'
+                                    }
+                                    ${isCollapsed || isMiniSidebar ? 'justify-center' : 'justify-start'}
+                                `}
+                                title={isCollapsed || isMiniSidebar ? item.label : ''}
+                            >
+                                <span className="text-lg">{item.icon}</span>
+                                {!isCollapsed && !isMiniSidebar && (
+                                    <span className="font-medium">{item.label}</span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </nav>
 
-                    {/* Footer */}
-                    <div className="p-4 border-t border-pink-200/50">
-                        <button className={`
-                            w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 
-                            hover:bg-pink-100/50 hover:text-gray-900 transition-colors
-                            ${isCollapsed ? 'justify-center' : 'justify-start'}
-                        `}>
-                            <span className="text-lg">🚪</span>
-                            {!isCollapsed && <span className="font-medium">Logout</span>}
-                        </button>
-                    </div>
+                                    {/* Footer */}
+                <div className="p-4 border-t border-pink-200/50">
+                    <button className={`
+                        w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 
+                        hover:bg-pink-100/50 hover:text-gray-900 transition-colors
+                        ${isCollapsed || isMiniSidebar ? 'justify-center' : 'justify-start'}
+                    `}
+                    title={isCollapsed || isMiniSidebar ? 'Logout' : ''}
+                    >
+                        <span className="text-lg">🚪</span>
+                        {!isCollapsed && !isMiniSidebar && <span className="font-medium">Logout</span>}
+                    </button>
+                </div>
                 </div>
 
 
             </div>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 lg:ml-0 ml-16 sm:ml-16 lg:ml-0 pl-4 lg:pl-0">
+            <main className={`flex-1 overflow-auto bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 transition-all duration-300 ${
+                isCollapsed ? 'ml-0 pl-4' : isMiniSidebar ? 'ml-16' : 'ml-64'
+            } lg:ml-0 lg:pl-0`}>
                 {renderContent()}
             </main>
         </div>
