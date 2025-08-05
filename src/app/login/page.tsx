@@ -5,17 +5,31 @@ import Link from "next/link";
 import Topbar from "../topbar/page";
 import Footer from "../footer/footer";
 import { useRouter } from "next/navigation";
+import Services from "../services/signup/services";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [formError, setFormError] = useState("");
   const router = useRouter();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(""); // Clear previous errors
+    try {
+      const response = await Services.login({email, password});
+      if(response.success) {
+        router.push("/user");
+      }
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        setFormError("Invalid email or password");
+      } else {
+        setFormError("An error occurred. Please try again.");
+      }
+    }
   };
 
   return (
@@ -111,6 +125,22 @@ export default function Login() {
                   </div>
                 </div>
 
+                {/* Error Display */}
+                {formError && (
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-red-700">{formError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Remember Me & Forgot Password */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -136,7 +166,6 @@ export default function Login() {
                 {/* Login Button */}
                 <button
                   type="submit"
-                  onClick={() => router.push("/user")}
                   className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 group"
                 >
                   <span className="flex items-center justify-center">

@@ -2,37 +2,113 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Topbar from "../topbar/page";
 import Footer from "../footer/footer";
+import Services from "../services/signup/services";
 
 export default function Signup() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    birthDate: "",
+    age: "",
+    country: "",
     gender: "",
-    agreeToTerms: false
+    lookingFor: ""
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [passwordLengthError, setPasswordLengthError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check if all fields are filled
+    const requiredFields = ['fullName', 'email', 'password', 'confirmPassword', 'age', 'country', 'gender', 'lookingFor'];
+    const emptyFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+    
+    if (emptyFields.length > 0) {
+      setFormError("Please fill in all required fields");
+      return;
+    }
+    
     // Handle signup logic here
-    console.log("Signup attempt:", formData);
+    if (formData.password.length < 6) {
+      setPasswordLengthError("Password must be at least 6 characters long");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    if (parseInt(formData.age) < 18) {
+      setAgeError("You must be 18 or older to register");
+      return;
+    }
+    
+    setPasswordError("");
+    setPasswordLengthError("");
+    setAgeError("");
+    setFormError("");
+    
+    // Remove confirmPassword from data sent to backend
+    const { confirmPassword, ...userData } = formData;
+    try {
+      const response = await Services.createUser(userData);
+      if(response.success) {
+        router.push("/login");
+      }
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        setFormError("User with this email already exists");
+      } else {
+        setFormError("");
+      }
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : formData.agreeToTerms;
+    const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
+
+    // Real-time password validation
+    if (name === 'password' || name === 'confirmPassword') {
+      const newFormData = { ...formData, [name]: value };
+      
+      // Check password length
+      if (name === 'password' && value.length > 0 && value.length < 6) {
+        setPasswordLengthError("Password must be at least 6 characters long");
+      } else {
+        setPasswordLengthError("");
+      }
+      
+      // Check password match
+      if (newFormData.confirmPassword && newFormData.password !== newFormData.confirmPassword) {
+        setPasswordError("Passwords do not match");
+      } else {
+        setPasswordError("");
+      }
+    }
+
+    // Real-time age validation
+    if (name === 'age') {
+      const age = parseInt(value);
+      if (value && (isNaN(age) || age < 18)) {
+        setAgeError("You must be 18 or older to register");
+      } else {
+        setAgeError("");
+      }
+    }
   };
 
   return (
@@ -60,38 +136,21 @@ export default function Signup() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      required
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      required
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                      placeholder="Enter your last name"
-                    />
-                  </div>
+                {/* Full Name Field */}
+                <div>
+                  <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                    placeholder="Enter your full name"
+                  />
                 </div>
 
                 {/* Email Field */}
@@ -101,7 +160,7 @@ export default function Signup() {
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="h-6 w-6 text-black-800 font-bold" fill="black" viewBox="0 0 20 20">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                       </svg>
@@ -128,7 +187,7 @@ export default function Signup() {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-6 w-6 text-gray-800 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
                       </div>
@@ -149,12 +208,12 @@ export default function Signup() {
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                       >
                         {showPassword ? (
-                          <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-6 w-6 text-gray-800 hover:text-gray-900 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                             <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                           </svg>
                         ) : (
-                          <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-6 w-6 text-gray-800 hover:text-gray-900 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                             <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.784 0l1.514-1.514a4 4 0 00-5.812-5.812z" clipRule="evenodd" />
                             <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
                           </svg>
@@ -168,7 +227,7 @@ export default function Signup() {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-6 w-6 text-gray-800 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
                       </div>
@@ -189,12 +248,12 @@ export default function Signup() {
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                       >
                         {showConfirmPassword ? (
-                          <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-6 w-6 text-gray-800 hover:text-gray-900 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                             <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                           </svg>
                         ) : (
-                          <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-6 w-6 text-gray-800 hover:text-gray-900 font-bold" fill="currentColor" viewBox="0 0 20 20" style={{filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'}}>
                             <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.784 0l1.514-1.514a4 4 0 00-5.812-5.812z" clipRule="evenodd" />
                             <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
                           </svg>
@@ -204,22 +263,91 @@ export default function Signup() {
                   </div>
                 </div>
 
-                {/* Birth Date and Gender */}
+                {/* Password Error Display */}
+                {passwordError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-6 w-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-red-800">{passwordError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Password Length Error Display */}
+                {passwordLengthError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-red-800">{passwordLengthError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Age and Country */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="birthDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Birth Date
+                    <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Age
                     </label>
                     <input
-                      id="birthDate"
-                      name="birthDate"
-                      type="date"
+                      id="age"
+                      name="age"
+                      type="number"
+                      min="18"
                       required
-                      value={formData.birthDate}
+                      value={formData.age}
                       onChange={handleInputChange}
-                      className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                      className={`block w-full px-4 py-4 border rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm ${ageError ? 'border-red-300 focus:ring-red-500' : 'border-gray-200 focus:ring-pink-500'
+                        }`}
+                      placeholder="Enter your age"
                     />
                   </div>
+                  <div>
+                    <label htmlFor="country" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Country
+                    </label>
+                    <input
+                      id="country"
+                      name="country"
+                      type="text"
+                      required
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                      placeholder="Enter your country"
+                    />
+                  </div>
+                </div>
+                {/* Age Error Display */}
+                {ageError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-6 w-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-red-800">{ageError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Gender and Looking For */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="gender" className="block text-sm font-semibold text-gray-700 mb-2">
                       I am a
@@ -233,40 +361,48 @@ export default function Signup() {
                       className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
                     >
                       <option value="">Select gender</option>
-                      <option value="man">Man</option>
-                      <option value="woman">Woman</option>
-                      <option value="non-binary">Non-binary</option>
+                      <option value="Man">Man</option>
+                      <option value="Woman">Woman</option>
+                      <option value="Non-Binary">Non-binary</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="lookingFor" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Looking for
+                    </label>
+                    <select
+                      id="lookingFor"
+                      name="lookingFor"
+                      required
+                      value={formData.lookingFor}
+                      onChange={handleInputChange}
+                      className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                    >
+                      <option value="">Select preference</option>
+                      <option value="Serious Relationship">Serious Relationship</option>
+                      <option value="Marriage">Marriage</option>
+                      <option value="Casual Dating">Casual Dating</option>
+                      <option value="New Friends">New Friends</option>
+                      <option value="Polyamory">Polyamory</option>
                     </select>
                   </div>
                 </div>
 
-                {/* Terms and Conditions */}
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="agreeToTerms"
-                      name="agreeToTerms"
-                      type="checkbox"
-                      required
-                      checked={formData.agreeToTerms}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                    />
+                {/* Form Error Display */}
+                {formError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-6 w-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-red-800">{formError}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="ml-3 text-sm">
-                    <label htmlFor="agreeToTerms" className="text-gray-700">
-                      I agree to the{" "}
-                      <a href="#" className="font-medium text-pink-600 hover:text-pink-500 transition-colors duration-300">
-                        Terms of Service
-                      </a>{" "}
-                      and{" "}
-                      <a href="#" className="font-medium text-pink-600 hover:text-pink-500 transition-colors duration-300">
-                        Privacy Policy
-                      </a>
-                    </label>
-                  </div>
-                </div>
-
+                )}
                 {/* Signup Button */}
                 <button
                   type="submit"
